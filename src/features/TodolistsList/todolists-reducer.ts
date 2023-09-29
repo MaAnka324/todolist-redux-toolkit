@@ -35,6 +35,7 @@ const slice = createSlice({
             if (index !== -1) state[index].entityStatus = action.payload.status
         },
         setTodolists: (state, action: PayloadAction<{ todolists: TodolistType[] }>) => {
+            // return action.todolists.map((tl) => ({ ...tl, filter: "all", entityStatus: "idle" }))
             return action.payload.todolists.map((tl) => ({ ...tl, filter: "all", entityStatus: "idle" }))
         },
     },
@@ -47,29 +48,6 @@ const slice = createSlice({
 
 export const todolistsAction = slice.actions
 export const todolistsReducer = slice.reducer
-
-// export const _todolistsReducer = (
-//     state: Array<TodolistDomainType> = initialState,
-//     action: ActionsType,
-// ): Array<TodolistDomainType> => {
-//     switch (action.type) {
-// case "REMOVE-TODOLIST":
-//     return state.filter((tl) => tl.id != action.id)
-// case "ADD-TODOLIST":
-//     return [{ ...action.todolist, filter: "all", entityStatus: "idle" }, ...state]
-
-// case "CHANGE-TODOLIST-TITLE":
-//     return state.map((tl) => (tl.id === action.id ? { ...tl, title: action.title } : tl))
-// case "CHANGE-TODOLIST-FILTER":
-//     return state.map((tl) => (tl.id === action.id ? { ...tl, filter: action.filter } : tl))
-// case "CHANGE-TODOLIST-ENTITY-STATUS":
-//     return state.map((tl) => (tl.id === action.id ? { ...tl, entityStatus: action.status } : tl))
-//         case "SET-TODOLISTS":
-//             return action.todolists.map((tl) => ({ ...tl, filter: "all", entityStatus: "idle" }))
-//         default:
-//             return state
-//     }
-// }
 
 // thunks
 export const fetchTodolistsTC = (): AppThunk => {
