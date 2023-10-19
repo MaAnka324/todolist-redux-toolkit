@@ -1,11 +1,12 @@
 import { TaskPriorities, TaskStatuses, TaskType, todolistsAPI, UpdateTaskModelType } from "api/todolists-api"
 import { Dispatch } from "redux"
-import { AppThunk } from "app/store"
+import { AppDispatch, AppRootStateType, AppThunk } from "app/store"
 import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
 import { appActions } from "app/app-reducer"
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { todolistsAction } from "features/TodolistsList/todolists-reducer"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
+import { createAppAsyncThunk } from "utils/createAsyncThunk"
 
 const initialState: TasksStateType = {}
 
@@ -135,14 +136,22 @@ export const tasksReducer = slice.reducer
 //         })
 //     }
 
-const fetchTasksTC = createAsyncThunk(`${slice.name}/fetchTasksTC`, async (todolistId: string, thunkAPI) => {
-    const { dispatch } = thunkAPI
-    dispatch(appActions.setAppStatus({ status: "loading" }))
-    const res = await todolistsAPI.getTasks(todolistId)
-    //dispatch(tasksAction.setTasks({ tasks: res.data.items, todolistId }))
-    dispatch(appActions.setAppStatus({ status: "succeeded" }))
-    return { tasks: res.data.items, todolistId }
-})
+const fetchTasksTC = createAppAsyncThunk<{ tasks: TaskType[]; todolistId: string }, string>(
+    `${slice.name}/fetchTasksTC`,
+    async (todolistId: string, thunkAPI) => {
+        const { dispatch, rejectWithValue } = thunkAPI
+        try {
+            dispatch(appActions.setAppStatus({ status: "loading" }))
+            const res = await todolistsAPI.getTasks(todolistId)
+            //dispatch(tasksAction.setTasks({ tasks: res.data.items, todolistId }))
+            dispatch(appActions.setAppStatus({ status: "succeeded" }))
+            return { tasks: res.data.items, todolistId }
+        } catch (error: any) {
+            handleServerAppError(error, dispatch)
+            return rejectWithValue(null)
+        }
+    },
+)
 
 export const removeTaskTC =
     (taskId: string, todolistId: string): AppThunk =>
