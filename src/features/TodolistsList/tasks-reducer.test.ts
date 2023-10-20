@@ -109,20 +109,24 @@ test("correct task should be added to correct array", () => {
     //     id: "id exists",
     // })
 
-    const action = tasksAction.addTask({
-        task: {
-            todoListId: "todolistId2",
-            title: "juce",
-            status: TaskStatuses.New,
-            addedDate: "",
-            deadline: "",
-            description: "",
-            order: 0,
-            priority: 0,
-            startDate: "",
-            id: "id exists",
+    const action = tasksThunks.addTaskTC.fulfilled(
+        {
+            task: {
+                todoListId: "todolistId2",
+                title: "juce",
+                status: TaskStatuses.New,
+                addedDate: "",
+                deadline: "",
+                description: "",
+                order: 0,
+                priority: 0,
+                startDate: "",
+                id: "id exists",
+            },
         },
-    })
+        "requestId",
+        { title: "juce", todolistId: "todolistId2" },
+    )
 
     const endState = tasksReducer(startState, action)
 
@@ -134,11 +138,12 @@ test("correct task should be added to correct array", () => {
 })
 test("status of specified task should be changed", () => {
     //const action = updateTaskAC("2", { status: TaskStatuses.New }, "todolistId2")
-    const action = tasksAction.updateTask({
+    const payload = {
         taskId: "2",
         todolistId: "todolistId2",
-        model: { status: TaskStatuses.New },
-    })
+        domainModel: { status: TaskStatuses.New },
+    }
+    const action = tasksThunks.updateTaskTC.fulfilled(payload, "requestId", payload)
 
     const endState = tasksReducer(startState, action)
 
@@ -147,7 +152,12 @@ test("status of specified task should be changed", () => {
 })
 test("title of specified task should be changed", () => {
     //const action = updateTaskAC("2", { title: "yogurt" }, "todolistId2")
-    const action = tasksAction.updateTask({ taskId: "2", todolistId: "todolistId2", model: { title: "yogurt" } })
+    const payload = {
+        taskId: "2",
+        todolistId: "todolistId2",
+        domainModel: { status: TaskStatuses.New },
+    }
+    const action = tasksThunks.updateTaskTC.fulfilled(payload, "requestId", payload)
 
     const endState = tasksReducer(startState, action)
 
