@@ -1,11 +1,4 @@
-import {
-    ArgUpdateTask,
-    TaskPriorities,
-    TaskStatuses,
-    TaskType,
-    todolistsAPI,
-    UpdateTaskModelType,
-} from "api/todolists-api"
+import { TaskType, UpdateTaskModelType } from "api/base-api"
 import { AppThunk } from "app/store"
 import { handleServerNetworkError } from "utils/error-utils"
 import { appActions } from "app/app-reducer"
@@ -14,6 +7,8 @@ import { todolistsAction } from "features/TodolistsList/todolists-reducer"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
 import { createAppAsyncThunk } from "utils/createAsyncThunk"
 import { handleServerAppError } from "utils/handleServerAppError"
+import { ArgUpdateTask, todolistsAPI } from "features/TodolistsList/Todolist/todolistsApi"
+import { TaskPriorities, TaskStatuses } from "common/enum/enum"
 
 const initialState: TasksStateType = {}
 
