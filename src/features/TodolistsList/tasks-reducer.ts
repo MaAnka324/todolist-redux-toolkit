@@ -7,12 +7,13 @@ import {
     UpdateTaskModelType,
 } from "api/todolists-api"
 import { AppThunk } from "app/store"
-import { handleServerAppError, handleServerNetworkError } from "utils/error-utils"
+import { handleServerNetworkError } from "utils/error-utils"
 import { appActions } from "app/app-reducer"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { todolistsAction } from "features/TodolistsList/todolists-reducer"
 import { clearTasksAndTodolists } from "common/actions/common.actions"
 import { createAppAsyncThunk } from "utils/createAsyncThunk"
+import { handleServerAppError } from "utils/handleServerAppError"
 
 const initialState: TasksStateType = {}
 
@@ -222,8 +223,6 @@ const updateTaskTC = createAppAsyncThunk<ArgUpdateTask, ArgUpdateTask>(
             const state = getState()
             const task = state.tasks[arg.todolistId].find((t) => t.id === arg.taskId)
             if (!task) {
-                //throw new Error("task not found in the state");
-                console.warn("task not found in the state")
                 return rejectWithValue(null)
             }
             const apiModel: UpdateTaskModelType = {
