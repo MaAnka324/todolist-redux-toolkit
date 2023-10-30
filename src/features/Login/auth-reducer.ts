@@ -1,6 +1,5 @@
 import { handleServerNetworkError } from "utils/error-utils"
-import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppThunk } from "app/store"
+import { createSlice } from "@reduxjs/toolkit"
 import { appActions } from "app/app-reducer"
 import { handleServerAppError } from "utils/handleServerAppError"
 import { authAPI, LoginParamsType } from "features/Login/authApi"
@@ -121,7 +120,7 @@ const initializeAppTC = createAppAsyncThunk<{ isLoggedIn: boolean }, undefined>(
                 // dispatch(authActions.setIsLoggedIn({ isLoggedIn: true }))
                 return { isLoggedIn: true }
             } else {
-                handleServerNetworkError(res.data, dispatch)
+                // handleServerNetworkError(res.data, dispatch)
                 return rejectWithValue(null)
             }
         } catch (error) {

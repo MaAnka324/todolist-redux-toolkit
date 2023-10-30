@@ -1,9 +1,4 @@
-import { authActions } from "features/Login/auth-reducer"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { AppThunk } from "app/store"
-import { authAPI } from "features/Login/authApi"
-import { createAppAsyncThunk } from "utils/createAsyncThunk"
-import { handleServerNetworkError } from "utils/error-utils"
 
 export type RequestStatusType = "idle" | "loading" | "succeeded" | "failed"
 

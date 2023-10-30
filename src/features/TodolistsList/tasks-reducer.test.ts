@@ -1,6 +1,6 @@
-import { tasksAction, tasksReducer, TasksStateType, tasksThunks } from "./tasks-reducer"
+import { tasksReducer, TasksStateType, tasksThunks } from "./tasks-reducer"
 import { TaskType } from "api/base-api"
-import { todolistsAction } from "features/TodolistsList/todolists-reducer"
+import { todolistsThunks } from "features/TodolistsList/todolists-reducer"
 import { TaskPriorities, TaskStatuses } from "common/enum/enum"
 
 let startState: TasksStateType = {}
@@ -174,14 +174,19 @@ test("new array should be added when new todolist is added", () => {
     //     order: 0,
     //     addedDate: "",
     // })
-    const action = todolistsAction.addTodolist({
-        todolist: {
-            id: "blabla",
-            title: "new todolist",
-            order: 0,
-            addedDate: "",
+    const todolist = {
+        id: "blabla",
+        title: "new todolist",
+        order: 0,
+        addedDate: "",
+    }
+    const action = todolistsThunks.addTodolist.fulfilled(
+        {
+            todolist,
         },
-    })
+        "requestId",
+        todolist.title,
+    )
 
     const endState = tasksReducer(startState, action)
 
@@ -195,7 +200,8 @@ test("new array should be added when new todolist is added", () => {
     expect(endState[newKey]).toEqual([])
 })
 test("propertry with todolistId should be deleted", () => {
-    const action = todolistsAction.removeTodolist({ id: "todolistId2" })
+    const id = "todolistId2"
+    const action = todolistsThunks.removeTodolist.fulfilled({ id }, "requestId", id)
 
     const endState = tasksReducer(startState, action)
 
@@ -210,12 +216,15 @@ test("empty arrays should be added when we set todolists", () => {
     //     { id: "1", title: "title 1", order: 0, addedDate: "" },
     //     { id: "2", title: "title 2", order: 0, addedDate: "" },
     // ])
-    const action = todolistsAction.setTodolists({
-        todolists: [
-            { id: "1", title: "title 1", order: 0, addedDate: "" },
-            { id: "2", title: "title 2", order: 0, addedDate: "" },
-        ],
-    })
+    const action = todolistsThunks.fetchTodolistsTC.fulfilled(
+        {
+            todolists: [
+                { id: "1", title: "title 1", order: 0, addedDate: "" },
+                { id: "2", title: "title 2", order: 0, addedDate: "" },
+            ],
+        },
+        "requestId",
+    )
 
     const endState = tasksReducer({}, action)
 
