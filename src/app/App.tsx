@@ -4,7 +4,7 @@ import { TodolistsList } from "features/TodolistsList/TodolistsList"
 import { ErrorSnackbar } from "components/ErrorSnackbar/ErrorSnackbar"
 import { useDispatch, useSelector } from "react-redux"
 import { AppRootStateType } from "./store"
-import { initializeAppTC, RequestStatusType } from "./app-reducer"
+import { RequestStatusType } from "./app-reducer"
 import { HashRouter, Route, Routes } from "react-router-dom"
 import { Login } from "features/Login/Login"
 import {
@@ -31,7 +31,7 @@ function App({ demo = false }: PropsType) {
     const dispatch = useDispatch<any>()
 
     useEffect(() => {
-        dispatch(initializeAppTC())
+        dispatch(authThunks.initializeAppTC())
     }, [])
 
     const logoutHandler = useCallback(() => {
