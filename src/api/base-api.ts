@@ -12,11 +12,11 @@ export const instance = axios.create({
     ...settings,
 })
 
-export type ResponseType<D = {}> = {
-    resultCode: number
-    messages: Array<string>
-    data: D
-}
+// export type ResponseType<D = {}> = {
+//     resultCode: number
+//     messages: Array<string>
+//     data: D
+// }
 
 export type TaskType = {
     description: string

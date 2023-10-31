@@ -1,8 +1,8 @@
-import { ResponseType } from "api/base-api"
 import { Dispatch } from "redux"
 import { appActions } from "app/app-reducer"
+import { BaseResponseType } from "api/base-api"
 
-export const handleServerAppError = <D>(data: ResponseType<D>, dispatch: Dispatch) => {
+export const handleServerAppError = <D>(data: BaseResponseType<D>, dispatch: Dispatch) => {
     let errorMessage = "Some error occurred"
     if (data.messages.length) {
         //dispatch(setAppErrorAC(data.messages[0]))
