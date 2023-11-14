@@ -39,7 +39,7 @@ const loginTC = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>(
                 return { isLoggedIn: true }
             } else {
                 console.log(res.data)
-                handleServerAppError(res.data, dispatch)
+                handleServerAppError(res.data, dispatch, false)
                 return rejectWithValue(res.data)
             }
         } catch (error) {
