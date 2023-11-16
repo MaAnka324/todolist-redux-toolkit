@@ -8,6 +8,7 @@ import { createAppAsyncThunk } from "utils/createAsyncThunk"
 import { handleServerAppError } from "utils/handleServerAppError"
 import { ArgUpdateTask, todolistsAPI } from "features/TodolistsList/Todolist/todolistsApi"
 import { ResultCode, TaskPriorities, TaskStatuses } from "common/enum/enum"
+import { thunkTryCatch } from "utils/thunk-try-catch"
 
 const initialState: TasksStateType = {}
 
@@ -174,21 +175,32 @@ const addTaskTC = createAppAsyncThunk<{ task: TaskType }, { todolistId: string; 
     `${slice.name}/addTasksTC`,
     async (arg, thunkAPI) => {
         const { dispatch, rejectWithValue } = thunkAPI
-        try {
-            dispatch(appActions.setAppStatus({ status: "loading" }))
+
+        return thunkTryCatch(thunkAPI, async () => {
             const res = await todolistsAPI.createTask(arg.todolistId, arg.title)
             if (res.data.resultCode === 0) {
                 const task = res.data.data.item
-                dispatch(appActions.setAppStatus({ status: "succeeded" }))
                 return { task }
             } else {
                 handleServerAppError(res.data, dispatch)
                 return rejectWithValue(null)
             }
-        } catch (error) {
-            handleServerNetworkError(error, dispatch)
-            return rejectWithValue(null)
-        }
+        })
+        // try {
+        //     dispatch(appActions.setAppStatus({ status: "loading" }))
+        //     const res = await todolistsAPI.createTask(arg.todolistId, arg.title)
+        //     if (res.data.resultCode === 0) {
+        //         const task = res.data.data.item
+        //         dispatch(appActions.setAppStatus({ status: "succeeded" }))
+        //         return { task }
+        //     } else {
+        //         handleServerAppError(res.data, dispatch)
+        //         return rejectWithValue(null)
+        //     }
+        // } catch (error) {
+        //     handleServerNetworkError(error, dispatch)
+        //     return rejectWithValue(null)
+        // }
     },
 )
 
