@@ -19,6 +19,7 @@ import {
 } from "@mui/material"
 import { Menu } from "@mui/icons-material"
 import { authThunks } from "features/Login/auth-reducer"
+import { useActions } from "hooks/useActions"
 
 type PropsType = {
     demo?: boolean
@@ -30,12 +31,16 @@ function App({ demo = false }: PropsType) {
     const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn)
     const dispatch = useDispatch<any>()
 
+    const { initializeAppTC, logoutTC } = useActions(authThunks)
+
     useEffect(() => {
-        dispatch(authThunks.initializeAppTC())
+        // dispatch(authThunks.initializeAppTC())
+        // bindActionCreators(authThunks.initializeAppTC, dispatch)()
+        initializeAppTC()
     }, [])
 
     const logoutHandler = useCallback(() => {
-        dispatch(authThunks.logoutTC())
+        logoutTC()
     }, [])
 
     if (!isInitialized) {
