@@ -4,6 +4,7 @@ import { appActions } from "app/app-reducer"
 import { handleServerAppError } from "utils/handleServerAppError"
 import { authAPI, LoginParamsType } from "features/Login/authApi"
 import { createAppAsyncThunk } from "utils/createAsyncThunk"
+import { thunkTryCatch } from "utils/thunk-try-catch"
 
 const slice = createSlice({
     name: "auth",
@@ -31,7 +32,7 @@ const loginTC = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>(
     `${slice.name}/loginTC`,
     async (arg, thunkAPI) => {
         const { dispatch, rejectWithValue } = thunkAPI
-        try {
+        return thunkTryCatch(thunkAPI, async () => {
             dispatch(appActions.setAppStatus({ status: "loading" }))
             const res = await authAPI.login(arg)
             if (res.data.resultCode === 0) {
@@ -43,10 +44,7 @@ const loginTC = createAppAsyncThunk<{ isLoggedIn: boolean }, LoginParamsType>(
                 handleServerAppError(res.data, dispatch, isShowAppError)
                 return rejectWithValue(res.data)
             }
-        } catch (error) {
-            handleServerNetworkError(error, dispatch)
-            return rejectWithValue(null)
-        }
+        })
     },
 )
 
@@ -76,7 +74,7 @@ const logoutTC = createAppAsyncThunk<{ isLoggedIn: boolean }, undefined>(
     `${slice.name}/logoutTC`,
     async (_, thunkAPI) => {
         const { dispatch, rejectWithValue } = thunkAPI
-        try {
+        return thunkTryCatch(thunkAPI, async () => {
             dispatch(appActions.setAppStatus({ status: "loading" }))
             const res = await authAPI.logout()
             if (res.data.resultCode === 0) {
@@ -86,10 +84,7 @@ const logoutTC = createAppAsyncThunk<{ isLoggedIn: boolean }, undefined>(
                 handleServerAppError(res.data, dispatch)
                 return rejectWithValue(null)
             }
-        } catch (error) {
-            handleServerNetworkError(error, dispatch)
-            return rejectWithValue(null)
-        }
+        })
     },
 )
 
