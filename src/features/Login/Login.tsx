@@ -8,6 +8,12 @@ import { Button, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, 
 import { authThunks } from "features/Login/auth-reducer"
 import { BaseResponseType } from "api/base-api"
 
+type FormikErrorType = {
+    email?: string
+    password?: string
+    rememberMe?: boolean
+}
+
 type FormValues = {
     email: string
     password: string
@@ -20,18 +26,20 @@ export const Login = () => {
     const isLoggedIn = useSelector<AppRootStateType, boolean>((state) => state.auth.isLoggedIn)
 
     const formik = useFormik({
-        // validate: (values) => {
-        //     if (!values.email) {
-        //         return {
-        //             email: "Email is required",
-        //         }
-        //     }
-        //     if (!values.password) {
-        //         return {
-        //             password: "Password is required",
-        //         }
-        //     }
-        // },
+        validate: (values) => {
+            const errors: FormikErrorType = {}
+            if (!values.email) {
+                errors.email = "Required"
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
+                errors.email = "Invalid email address"
+            }
+            if (!values.password) {
+                errors.password = "Required"
+            } else if (values.password?.length < 4) {
+                errors.password = "Please add more symbols"
+            }
+            return errors
+        },
         initialValues: {
             email: "",
             password: "",
@@ -52,6 +60,8 @@ export const Login = () => {
     if (isLoggedIn) {
         return <Navigate to={"/"} />
     }
+    // console.log(!formik.errors.email)
+    console.log(!formik.errors.password)
 
     return (
         <Grid container justifyContent="center">
@@ -71,16 +81,23 @@ export const Login = () => {
                         </FormLabel>
                         <FormGroup>
                             <TextField label="Email" margin="normal" {...formik.getFieldProps("email")} />
-                            {formik.errors.email ? <div style={{ color: "red" }}>{formik.errors.email}</div> : null}
+                            {formik.touched.email && formik.errors.email && (
+                                <div style={{ color: "red" }}>{formik.errors.email}</div>
+                            )}
+                            {/*{formik.errors.email ? <div style={{ color: "red" }}>{formik.errors.email}</div> : null}*/}
+
                             <TextField
                                 type="password"
                                 label="Password"
                                 margin="normal"
                                 {...formik.getFieldProps("password")}
                             />
-                            {formik.errors.password ? (
+                            {formik.touched.password && formik.errors.password && (
                                 <div style={{ color: "red" }}>{formik.errors.password}</div>
-                            ) : null}
+                            )}
+                            {/*{formik.errors.password ? (*/}
+                            {/*    <div style={{ color: "red" }}>{formik.errors.password}</div>*/}
+                            {/*) : null}*/}
                             <FormControlLabel
                                 label={"Remember me"}
                                 control={
@@ -90,7 +107,12 @@ export const Login = () => {
                                     />
                                 }
                             />
-                            <Button type={"submit"} variant={"contained"} color={"primary"}>
+                            <Button
+                                type={"submit"}
+                                variant={"contained"}
+                                color={"primary"}
+                                disabled={!!formik.errors.email || !!formik.errors.password}
+                            >
                                 Login
                             </Button>
                         </FormGroup>
