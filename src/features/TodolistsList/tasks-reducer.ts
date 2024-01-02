@@ -155,8 +155,6 @@ export type UpdateDomainTaskModelType = {
     startDate?: string
     deadline?: string
 }
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
+export type TasksStateType = Record<string, TaskType[]>
 
 export const tasksThunks = { fetchTasksTC, addTaskTC, updateTaskTC, removeTaskTC }
